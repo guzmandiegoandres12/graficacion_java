@@ -6,7 +6,10 @@
 package panel2;
 
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
@@ -16,7 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -28,15 +33,17 @@ public class ventFunc  extends JFrame{
      private  JPanel panel1,panel2,panel3,panel4,panel5,panel6,panel7;
      private  JButton graficar,carga_datos;
      private  JLabel etiqueta;
-     private  GridLayout maquetado;
+     private  BorderLayout maquetado,maquetado2;
      public  JTextField text1,text2,text3,text4,text5;
      public   JRadioButton lin,cua,cub,pol;
      private  ButtonGroup  selector;
      private  numeros  funcion;
+     public  JTextArea  tabla;
+     private JScrollPane scroll;
      public void ventFuncEje() {
      //definicion  de variables  elementos graficos     
      ventana2 =new JFrame();
-     ventana2.setSize(450,160);
+     ventana2.setSize(450,300);
      ventana2.setTitle("MODO FUNCION ALGEBRAICA");
      ventana2.setVisible(true);
      panel1=new JPanel();
@@ -44,18 +51,28 @@ public class ventFunc  extends JFrame{
      panel4=new JPanel();
      panel5=new JPanel();
      panel6=new JPanel();
-     maquetado=new GridLayout(3,1);
+     carga_datos=new JButton("CARGADATOS");
+     maquetado=new BorderLayout();
+     maquetado2=new BorderLayout();
      text1 = new JTextField(5);
      text2 = new JTextField(5);
      text3 = new JTextField(5);
      text4 = new JTextField(5);
+     tabla= new JTextArea(10,35);
      lin=new JRadioButton();
      cua=new JRadioButton();
      cub=new JRadioButton();
      selector= new ButtonGroup();
      funcion= new numeros();
+     tabla.setLineWrap(true);
+     scroll = new JScrollPane(tabla, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    
+             
+             
+             ;
  //llamdo y estucruracion de elementos graficos 
      ventana2.setLayout(maquetado);
+     
      //definicion de contenidos listas de   selectores y grupo  de botones selectores
      selector.add(lin);
      selector.add(cua);
@@ -67,29 +84,69 @@ public class ventFunc  extends JFrame{
      panel2.add(new JLabel("cuadratica"));
      panel2.add(cub);
      panel2.add(new JLabel("cubica"));
-     ventana2.add(panel1);
-     ventana2.add(panel2);
+     panel4.add(scroll);
+     panel5.setLayout(maquetado2);
+     panel5.add(panel4,BorderLayout.NORTH);
+     panel5.add(carga_datos,BorderLayout.CENTER);
+     ventana2.add(panel1,BorderLayout.NORTH);
+     ventana2.add(panel2,BorderLayout.CENTER);
+     ventana2.add(panel5,BorderLayout.SOUTH);
      cont_lin();
      selec_form selec_panel = new selec_form();
      lin.addActionListener(selec_panel);
      cua.addActionListener(selec_panel);
      cub.addActionListener(selec_panel);
+     carga_datos.addActionListener(selec_panel);
      
-     graficar.addActionListener(selec_panel);
     }
      private class selec_form implements ActionListener{
 
         @Override
+        
         public void actionPerformed(ActionEvent e) {
+           
             if (e.getSource()==lin){
              cont_lin();
-  
             }
             if (e.getSource()==cua){
              cont_cua();
             }
             if (e.getSource()==cub){
              cont_cub();
+            }
+            if(e.getSource()==carga_datos){
+                tabla.setText("");
+                double  valor_y=0;
+                int contador=-551;
+           
+                if (lin.isSelected()==true){ 
+                    for (int i=0;i<=1100;i++){
+                      valor_y= funcion.fun_lin(Double.valueOf(text2.getText()), Double.valueOf(text1.getText()),contador);
+                     String contenido =tabla.getText();
+                      tabla.setText(contenido+"\n"+"x= "+contador+"   y="+valor_y);
+                      contador++;
+                  }
+                }
+                if (cua.isSelected()==true){
+                    System.err.println("dhshfdsf");
+                   for (int i=0;i<=1100;i++){
+                    valor_y= funcion.fun_cua(Double.valueOf(text3.getText()),Double.valueOf(text2.getText()), Double.valueOf(text1.getText()),contador);
+                     String contenido =tabla.getText();
+                      tabla.setText(contenido+"\n"+"x= "+contador+"   y="+valor_y);
+                      contador++;
+                     }
+                }
+                if (cub.isSelected()==true){
+                    
+                   for (int i=0;i<=1100;i++){
+                    valor_y= funcion.fun_cub(Double.valueOf(text4.getText()),Double.valueOf(text3.getText()),Double.valueOf(text2.getText()), Double.valueOf(text1.getText()),contador);
+                     String contenido =tabla.getText();
+                      tabla.setText(contenido+"\n"+"x= "+contador+"   y="+valor_y);
+                      contador++;
+                     }
+
+                }
+             
             }
         }
      
